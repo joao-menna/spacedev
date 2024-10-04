@@ -1,0 +1,27 @@
+services:
+  backend:
+    command: [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload" ]
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - path: ./backend
+          action: sync
+          target: /app
+          ignore:
+            - __pycache__
+        - path: ./requirements.txt
+          action: rebuild
+    volumes:
+      - spacedev-chroma
+    ports:
+      - 8090:80
+    networks:
+      - spacedev
+
+volumes:
+  spacedev-chroma:
+
+networks:
+  spacedev:

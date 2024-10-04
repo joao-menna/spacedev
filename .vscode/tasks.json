@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "docker - dev - watch",
+            "command": "docker compose -f docker-compose.dev.yml watch",
+            "linux": {
+                "command": "sudo docker compose -f docker-compose.dev.yml watch",
+            }
+        },
+        {
+            "label": "docker - dev - up",
+            "command": "docker compose -f docker-compose.dev.yml up -d",
+            "linux": {
+                "command": "sudo docker compose -f docker-compose.dev.yml up -d",
+            }
+        },
+        {
+            "label": "docker - dev - down",
+            "command": "docker compose -f docker-compose.dev.yml down",
+            "linux": {
+                "command": "sudo docker compose -f docker-compose.dev.yml down",
+            }
+        }
+    ]
+}

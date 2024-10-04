@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 8090:80
+    volumes:
+      - spacedev-chroma
+    networks:
+      - spacedev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - spacedev
+
+volumes:
+  spacedev-chroma:
+
+networks:
+  spacedev:
