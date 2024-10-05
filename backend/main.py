@@ -1,19 +1,16 @@
+from app import (chat, index)
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 
 app = FastAPI(debug=True)
 
-@app.post("/api/index/one")
-async def index_one():
-    pass
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.post("/api/index/everything")
-async def index_all():
-    pass
-
-@app.delete('/api/index')
-async def index_clear():
-    pass
-
-@app.post("/api/chat")
-async def chat():
-    pass
+app.include_router(chat.router, prefix='/api/chat')
+app.include_router(index.router, prefix='/api/index')
