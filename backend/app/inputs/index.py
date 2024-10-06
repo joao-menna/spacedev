@@ -10,4 +10,4 @@ class Folder(BaseModel):
 
 class IndexInput(BaseModel):
     documents: list[Document] | None = None
-    paths: list[Folder] | None = None
+    folders: list[Folder] | None = None

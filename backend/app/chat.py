@@ -6,15 +6,17 @@ from app.helpers.get_chat_chain import get_chat_chain
 router = APIRouter()
 
 @router.post("")
-async def chat(chat_input: ChatInput):
-    async def iter_response():
+def chat(chat_input: ChatInput):
+    def iter_response():
         chain = get_chat_chain()
 
-        async for chunk in chain.astream(chat_input.prompt):
+        for chunk in chain.stream(chat_input.prompt):
             print(chunk)
             yield chunk
 
     try:
-        return StreamingResponse(iter_response(), media_type="text/plain")
-    except:
-        return False
+        headers = {"Cross-Origin-Allow-Origin": "*"}
+        return StreamingResponse(iter_response(), media_type="text/plain", headers=headers)
+    except Exception as e:
+        print(e)
+        return e

@@ -20,8 +20,8 @@ async def index_all(body: IndexInput):
         docs_from_paths = []
         docs_from_text = []
 
-        if not body.paths is None:
-            docs_from_paths = get_documents_from_paths(body.paths)
+        if not body.folders is None:
+            docs_from_paths = get_documents_from_paths(body.folders)
 
         if not body.documents is None:
             for doc in body.documents:
