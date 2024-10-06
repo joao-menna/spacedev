@@ -3,6 +3,9 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    environment:
+      - MODEL=llama3.1
+      - EMBEDDING_MODEL=nomic-embed-text
     ports:
       - 8090:80
     volumes:

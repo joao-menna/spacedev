@@ -6,11 +6,12 @@ from app.helpers.get_embedding_model import get_embedding_model
 from app.helpers.get_record_manager import get_record_manager
 from app.helpers.index_store import index_store
 from app.helpers.get_chroma import get_chroma
+import shutil
 import os
 
 router = APIRouter()
 
-@router.post("everything")
+@router.post("/everything")
 async def index_all(body: IndexInput):
     vector_store = get_chroma()
     record_manager = get_record_manager()
@@ -30,20 +31,43 @@ async def index_all(body: IndexInput):
 
         all_docs = docs_from_paths + docs_from_text
 
-        index_store(all_docs, vector_store, record_manager, "incremental")
+        result = index_store(all_docs, vector_store, record_manager, "incremental")
 
-        return { "success": True }
+        return { "success": True, "result": result }
     except :
         return { "success": False }
 
 @router.post("")
 async def index_one(body: IndexInput):
-    pass
+    vector_store = get_chroma()
+    record_manager = get_record_manager()
+
+    try:
+        docs_from_paths = []
+        docs_from_text = []
+
+        if not body.paths is None:
+            docs_from_paths = get_documents_from_paths(body.paths)
+
+        if not body.documents is None:
+            for doc in body.documents:
+                docs_from_text.append(
+                    Document(page_content=doc.content, metadata={ "source": doc.title })
+                )
+
+        all_docs = docs_from_paths + docs_from_text
+
+        result = index_store(all_docs, vector_store, record_manager, "incremental")
+        # ids = vector_store.add_documents(all_docs)
+
+        return { "success": True, "result": result }
+    except :
+        return { "success": False }
 
 @router.delete("")
 async def index_clear():
-    vector_store = get_chroma()
-    record_manager = get_record_manager()
-    index_store([], vector_store, record_manager, "full")
+    directory = os.path.abspath(os.path.join(os.getcwd(), "chroma"))
+
+    shutil.rmtree(directory)
 
     return { "success": True }

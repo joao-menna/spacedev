@@ -1,21 +1,20 @@
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from app.inputs.chat import ChatInput
-from app.helpers.get_llm import get_llm
+from app.helpers.get_chat_chain import get_chat_chain
 
 router = APIRouter()
 
 @router.post("")
 async def chat(chat_input: ChatInput):
     async def iter_response():
-        model = get_llm()
+        chain = get_chat_chain()
 
-        messages = [
-            ("system", "You are a helpful translator. Translate the user sentence to French."),
-            ("human", chat_input.prompt),
-        ]
+        async for chunk in chain.astream(chat_input.prompt):
+            print(chunk)
+            yield chunk
 
-        async for chunk in model.astream(messages):
-            yield chunk.content
-
-    return StreamingResponse(iter_response(), media_type="text/plain")
+    try:
+        return StreamingResponse(iter_response(), media_type="text/plain")
+    except:
+        return False

@@ -1,5 +1,6 @@
 from langchain_chroma import Chroma
 from app.helpers.get_embedding_model import get_embedding_model
+import os
 
 def get_chroma() -> Chroma:
     persist_directory = os.path.abspath(os.path.join(os.getcwd(), "chroma"))

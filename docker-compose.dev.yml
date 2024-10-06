@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - MODEL=llama3.1
+      - EMBEDDING_MODEL=nomic-embed-text
     develop:
       watch:
         - path: ./backend
