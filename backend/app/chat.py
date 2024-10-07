@@ -1,3 +1,4 @@
+from langchain_core.messages import AIMessage, HumanMessage
 from fastapi.responses import StreamingResponse
 from fastapi import APIRouter
 from app.helpers.get_agent_chained import get_chat_chain
@@ -12,7 +13,9 @@ async def chat(chat_input: ChatInput):
         chain = get_chat_chain()
 
         input_dict = {
-            "input": chat_input.prompt,
+            "messages": [
+                HumanMessage(chat_input.prompt),
+            ],
         }
 
         # input_dict = {
@@ -24,15 +27,9 @@ async def chat(chat_input: ChatInput):
 
         config = {"configurable": {"thread_id": chat_input.chat_id}}
 
-        async for chunk in chain.astream(
-            input_dict, config=config, stream_mode="messages"
-        ):
+        async for chunk in chain.astream(input_dict, config=config, stream_mode="messages"):
             print(chunk[0].content)
             yield chunk[0].content
-
-        # async for chunk in chain.astream(input_dict, config=config, stream_mode="messages"):
-        #     print(chunk[0].content)
-        #     yield chunk[0].content
 
     try:
         headers = {"Cross-Origin-Allow-Origin": "*"}

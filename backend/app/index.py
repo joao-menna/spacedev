@@ -35,7 +35,8 @@ async def index_all(body: IndexInput):
         result = index_store(all_docs, vector_store, record_manager, "incremental")
 
         return {"success": True, "result": result}
-    except:
+    except Exception as e:
+        print(e)
         return {"success": False}
 
 

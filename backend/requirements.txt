@@ -1,4 +1,5 @@
 tqdm
+chardet
 uvicorn
 fastapi
 langgraph

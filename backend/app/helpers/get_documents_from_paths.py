@@ -13,6 +13,7 @@ def get_documents_from_paths(folders: list[Folder]):
             glob=folder.glob,
             loader_cls=TextLoader,
             show_progress=True,
+            use_multithreading=True,
             loader_kwargs=text_loader_kwargs,
         )
 
