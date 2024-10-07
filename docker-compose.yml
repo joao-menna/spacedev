@@ -1,20 +1,19 @@
 services:
-  searxng:
-    image: searxng/searxng:latest
-    container_name: searxng
-    ports:
-      - 8080:8080
-    volumes:
-      - ./searxng:/etc/searxng
-    restart: on-failure:3
+  # searxng:
+  #   image: searxng/searxng:latest
+  #   container_name: searxng
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - ./searxng:/etc/searxng
+  #   restart: on-failure:3
 
   # backend:
   #   build:
   #     context: ./backend
   #     dockerfile: Dockerfile
-  #   environment:
-  #     - MODEL=llama3.1
-  #     - EMBEDDING_MODEL=nomic-embed-text
+  #   env_file:
+  #     - .env
   #   ports:
   #     - 8090:80
   #   volumes:
@@ -22,12 +21,12 @@ services:
   #   networks:
   #     - spacedev
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   networks:
-  #     - spacedev
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - spacedev
 
 # volumes:
 #   spacedev-chroma:

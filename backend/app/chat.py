@@ -18,13 +18,6 @@ async def chat(chat_input: ChatInput):
             ],
         }
 
-        # input_dict = {
-        #     "messages": [
-        #         ("system", system_prompt),
-        #         ("human", chat_input.prompt),
-        #     ],
-        # }
-
         config = {"configurable": {"thread_id": chat_input.chat_id}}
 
         async for chunk in chain.astream(input_dict, config=config, stream_mode="messages"):

@@ -7,4 +7,5 @@ langchain
 langchain-core
 langchain-chroma
 langchain-ollama
+langchain-openai
 langchain-community

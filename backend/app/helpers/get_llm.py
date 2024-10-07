@@ -1,14 +1,22 @@
 from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 import os
 
-local_llm = "llama3.1"
 
+def get_llm():
+    provider = os.environ.get("PROVIDER", "ollama")
 
-def get_llm() -> ChatOllama:
-    model = ChatOllama(
-        model=os.environ.get("MODEL", local_llm),
-        temperature=0.7
-    )
+    if provider == "ollama":
+        model = ChatOllama(
+            model=os.environ.get("MODEL", "llama3.1"),
+            temperature=0.7
+        )
+
+    if provider == "openai":
+        model = ChatOpenAI(
+            model=os.environ.get("MODEL", "gpt-4o"),
+            temperature=0.7,
+        )
 
     return model
 
