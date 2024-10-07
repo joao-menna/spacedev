@@ -1,6 +1,7 @@
 tqdm
 uvicorn
 fastapi
+langgraph
 langchain
 langchain-core
 langchain-chroma
