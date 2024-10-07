@@ -1,4 +1,4 @@
-from app import (chat, index)
+from app import chat, index
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 
@@ -12,5 +12,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(chat.router, prefix='/api/chat')
-app.include_router(index.router, prefix='/api/index')
+app.include_router(chat.router, prefix="/api/chat")
+app.include_router(index.router, prefix="/api/index")

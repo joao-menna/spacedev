@@ -76,7 +76,7 @@ async def call_model(state: State, config: RunnableConfig):
     messages = state["messages"]
     response = await model.ainvoke(messages, config)
 
-    return { "messages": response }
+    return {"messages": response}
 
 
 model = get_llm()

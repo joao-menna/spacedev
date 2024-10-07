@@ -11,6 +11,7 @@ import os
 
 router = APIRouter()
 
+
 @router.post("/everything")
 async def index_all(body: IndexInput):
     vector_store = get_chroma()
@@ -26,16 +27,17 @@ async def index_all(body: IndexInput):
         if not body.documents is None:
             for doc in body.documents:
                 docs_from_text.append(
-                    Document(page_content=doc.content, metadata={ "source": doc.title })
+                    Document(page_content=doc.content, metadata={"source": doc.title})
                 )
 
         all_docs = docs_from_paths + docs_from_text
 
         result = index_store(all_docs, vector_store, record_manager, "incremental")
 
-        return { "success": True, "result": result }
-    except :
-        return { "success": False }
+        return {"success": True, "result": result}
+    except:
+        return {"success": False}
+
 
 @router.post("")
 async def index_one(body: IndexInput):
@@ -52,7 +54,7 @@ async def index_one(body: IndexInput):
         if not body.documents is None:
             for doc in body.documents:
                 docs_from_text.append(
-                    Document(page_content=doc.content, metadata={ "source": doc.title })
+                    Document(page_content=doc.content, metadata={"source": doc.title})
                 )
 
         all_docs = docs_from_paths + docs_from_text
@@ -60,9 +62,10 @@ async def index_one(body: IndexInput):
         result = index_store(all_docs, vector_store, record_manager, "incremental")
         # ids = vector_store.add_documents(all_docs)
 
-        return { "success": True, "result": result }
-    except :
-        return { "success": False }
+        return {"success": True, "result": result}
+    except:
+        return {"success": False}
+
 
 @router.delete("")
 async def index_clear():
@@ -70,4 +73,4 @@ async def index_clear():
 
     shutil.rmtree(directory)
 
-    return { "success": True }
+    return {"success": True}

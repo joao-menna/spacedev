@@ -14,7 +14,9 @@ import json
 from app.helpers.get_chroma import get_chroma
 from app.helpers.get_llm import get_llm, get_llm_json
 
-generation_prompt = PromptTemplate(input_variables=["question", "context"], template="""
+generation_prompt = PromptTemplate(
+    input_variables=["question", "context"],
+    template="""
 Your name is SpaceDev.
 Learn and interpret the code in the context, later you may be prompted to explain this code or recover it.
 You will be used as a knowledge base, you are a helpful assistant that answer in the same language that you were asked the question.
@@ -39,9 +41,12 @@ Example with sources (where your_response is your response):
 Answer the following question:
 
 {question}
-""")
+""",
+)
 
-retrieval_grader_prompt = PromptTemplate(input_variables=["question", "document"], template="""
+retrieval_grader_prompt = PromptTemplate(
+    input_variables=["question", "document"],
+    template="""
 You are a grader assessing relevance of a retrieved document to a user question. \n 
 Here is the retrieved document: \n\n {document} \n\n
 Here is the user question: {question} \n
@@ -49,9 +54,12 @@ If the document contains keywords related to the user question, grade it as rele
 It does not need to be a stringent test. The goal is to filter out erroneous retrievals. \n
 Give a binary score 'yes' or 'no' score to indicate whether the document is relevant to the question. \n
 Provide the binary score as a JSON with a single key 'score' and no premable or explanation.
-""")
+""",
+)
 
-hallucination_grader_prompt = PromptTemplate(input_variables=["question", "context"], template="""
+hallucination_grader_prompt = PromptTemplate(
+    input_variables=["question", "context"],
+    template="""
 You are a grader assessing whether an answer is grounded in / supported by a set of facts. \n 
 Here are the facts:
 \n ------- \n
@@ -60,9 +68,12 @@ Here are the facts:
 Here is the answer: {generation}
 Give a binary score 'yes' or 'no' score to indicate whether the answer is grounded in / supported by a set of facts. \n
 Provide the binary score as a JSON with a single key 'score' and no preamble or explanation.
-""")
+""",
+)
 
-answer_grader_prompt = PromptTemplate(input_variables=["generation", "question"], template="""
+answer_grader_prompt = PromptTemplate(
+    input_variables=["generation", "question"],
+    template="""
 You are a grader assessing whether an answer is useful to resolve a question. \n 
 Here is the answer:
 \n ------- \n
@@ -71,13 +82,16 @@ Here is the answer:
 Here is the question: {question}
 Give a binary score 'yes' or 'no' to indicate whether the answer is useful to resolve a question. \n
 Provide the binary score as a JSON with a single key 'score' and no preamble or explanation.
-""")
+""",
+)
 
-question_rewriter_prompt = PromptTemplate(input_variables=[], template="""
+question_rewriter_prompt = PromptTemplate(
+    input_variables=[],
+    template="""
 You a question re-writer that converts an input question to a better version that is optimized \n 
 for vectorstore retrieval. Look at the initial and formulate an improved question. \n
 Here is the initial question: \n\n {question}. Improved question with no preamble: \n 
-"""
+""",
 )
 
 llm = get_llm()
@@ -88,6 +102,7 @@ retrieval_grader = retrieval_grader_prompt | llm_json_mode | JsonOutputParser()
 hallucination_grader = hallucination_grader_prompt | llm_json_mode | JsonOutputParser()
 answer_grader = answer_grader_prompt | llm_json_mode | JsonOutputParser()
 question_rewriter = question_rewriter_prompt | llm | StrOutputParser()
+
 
 class GraphState(TypedDict):
     question: str
@@ -116,7 +131,7 @@ def retrieve(state: GraphState):
     retriever = vector_store.as_retriever()
 
     documents = retriever.invoke(question)
-    return { "documents": documents, "question": question }
+    return {"documents": documents, "question": question}
 
 
 def generate(state: GraphState):
@@ -128,9 +143,13 @@ def generate(state: GraphState):
     docs_txt = format_docs(documents)
 
     llm = get_llm()
-    generation_result = generation.invoke({ "context": documents, "question": question })
+    generation_result = generation.invoke({"context": documents, "question": question})
 
-    return { "generation": generation_result, "question": question, "documents": documents }
+    return {
+        "generation": generation_result,
+        "question": question,
+        "documents": documents,
+    }
 
 
 def grade_documents(state: GraphState):
@@ -143,7 +162,7 @@ def grade_documents(state: GraphState):
 
     for doc in documents:
         score = retrieval_grader.invoke(
-            { "question": question, "document": doc.page_content }
+            {"question": question, "document": doc.page_content}
         )
 
         grade = score["score"]
@@ -151,7 +170,7 @@ def grade_documents(state: GraphState):
         if grade.lower() == "yes":
             filtered_docs.append(doc)
 
-    return { "documents": filtered_docs, "question": question }
+    return {"documents": filtered_docs, "question": question}
 
 
 def transform_query(state: GraphState):
@@ -160,9 +179,9 @@ def transform_query(state: GraphState):
     question = state["question"]
     documents = state["documents"]
 
-    better_question = question_rewriter.invoke({ "question": question })
+    better_question = question_rewriter.invoke({"question": question})
 
-    return { "documents": documents, "question": better_question }
+    return {"documents": documents, "question": better_question}
 
 
 def decide_to_generate(state: GraphState):
@@ -183,13 +202,13 @@ def grade_generation_v_documents_and_question(state):
     generation = state["generation"]
 
     score = hallucination_grader.invoke(
-        { "documents": documents, "generation": generation }
+        {"documents": documents, "generation": generation}
     )
 
     grade = score["score"]
 
     if grade == "yes":
-        score = answer_grader.invoke({ "question": question, "generation": generation })
+        score = answer_grader.invoke({"question": question, "generation": generation})
         grade = score["score"]
 
         if grade == "yes":

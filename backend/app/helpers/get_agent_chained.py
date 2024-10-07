@@ -73,7 +73,7 @@ prompt = ChatPromptTemplate.from_messages(
     [
         ("system", system_prompt),
         MessagesPlaceholder("chat_history"),
-        ("human", "{input}")
+        ("human", "{input}"),
     ]
 )
 
@@ -101,12 +101,14 @@ rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chai
 
 
 def call_model(state: State):
-    response = rag_chain.invoke({
-        "chat_history": state["chat_history"],
-        "context": format_docs(state.get("context", [])),
-        "input": state["input"],
-        "answer": "",
-    })
+    response = rag_chain.invoke(
+        {
+            "chat_history": state["chat_history"],
+            "context": format_docs(state.get("context", [])),
+            "input": state["input"],
+            "answer": "",
+        }
+    )
     return {
         "chat_history": [
             HumanMessage(state["input"]),

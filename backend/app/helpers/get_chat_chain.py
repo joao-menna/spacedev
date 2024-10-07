@@ -53,7 +53,7 @@ def get_chat_chain():
     model = get_llm()
 
     chain = (
-        { "context": retriever | format_docs, "question": RunnablePassthrough() }
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
         | prompt
         | model
         | StrOutputParser()
