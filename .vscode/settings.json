@@ -15,5 +15,12 @@
     "editor.tabSize": 2,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.tabSize": 2
   }
 }
