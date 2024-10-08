@@ -32,7 +32,7 @@ async def index_all(body: IndexInput):
 
         all_docs = docs_from_paths + docs_from_text
 
-        result = index_store(all_docs, vector_store, record_manager, "incremental")
+        result = index_store(all_docs, vector_store, record_manager, "full")
 
         return {"success": True, "result": result}
     except Exception as e:
@@ -61,7 +61,6 @@ async def index_one(body: IndexInput):
         all_docs = docs_from_paths + docs_from_text
 
         result = index_store(all_docs, vector_store, record_manager, "incremental")
-        # ids = vector_store.add_documents(all_docs)
 
         return {"success": True, "result": result}
     except:
