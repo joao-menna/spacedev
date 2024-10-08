@@ -1,3 +1,9 @@
 #!/bin/sh
 
-# TODO: Setup code, later do it in ps1
+echo "---COPYING .env---"
+if [ -f "./.env" ]; then
+    echo ".env already exists... skipping"
+else
+    echo "Copying .env"
+    cp .env.example .env
+fi
