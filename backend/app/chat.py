@@ -1,7 +1,7 @@
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, AIMessageChunk
 from fastapi.responses import StreamingResponse
 from fastapi import APIRouter
-from app.helpers.get_agent_chained import get_chat_chain
+from app.helpers.get_agent_chained import get_chat_chain, system_prompt
 from app.inputs.chat import ChatInput
 
 router = APIRouter()
@@ -14,14 +14,18 @@ async def chat(chat_input: ChatInput):
 
         input_dict = {
             "messages": [
-                HumanMessage(chat_input.prompt),
+                ("system", system_prompt),
+                ("placeholder", "{context}")
+                ("human", chat_input.prompt),
             ],
         }
 
         config = {"configurable": {"thread_id": chat_input.chat_id}}
 
         async for chunk in chain.astream(input_dict, config=config, stream_mode="messages"):
-            print(chunk[0].content)
+            if not isinstance(chunk[0], AIMessageChunk):
+                continue
+
             yield chunk[0].content
 
     try:

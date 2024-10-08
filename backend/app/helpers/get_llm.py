@@ -14,7 +14,7 @@ def get_llm():
 
     if provider == "openai":
         model = ChatOpenAI(
-            model=os.environ.get("MODEL", "gpt-4o"),
+            model=os.environ.get("MODEL", "gpt-4o-mini"),
             temperature=0.7,
         )
 
