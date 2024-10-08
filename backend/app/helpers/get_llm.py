@@ -23,7 +23,7 @@ def get_llm():
 
 def get_llm_json() -> ChatOllama:
     model = ChatOllama(
-        model=os.environ.get("MODEL", local_llm), temperature=0, format="json"
+        model=os.environ.get("MODEL", "llama3.1"), temperature=0, format="json"
     )
 
     return model

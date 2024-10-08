@@ -57,7 +57,9 @@ retriever = vector_store.as_retriever(search_type="mmr")
 prompt = ChatPromptTemplate.from_messages(
     [
         ("system", system_prompt),
-        ("human", "{input}")
+        ("placeholder", "{context}"),
+        ("placeholder", "{chat_history}"),
+        ("human", "{input}"),
     ],
 )
 
@@ -89,10 +91,12 @@ tool_node = ToolNode(tools)
 
 model = get_llm().bind_tools(tools)
 
+runnable = prompt | model
+
 
 async def call_model(state: State, config: RunnableConfig):
     messages = state["messages"]
-    response = await model.ainvoke(messages, config)
+    response = await runnable.ainvoke(messages, config)
     return {
         "messages": [response],
     }

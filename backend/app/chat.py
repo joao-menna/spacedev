@@ -1,7 +1,7 @@
-from langchain_core.messages import AIMessage, HumanMessage, AIMessageChunk
+from langchain_core.messages import AIMessageChunk
 from fastapi.responses import StreamingResponse
 from fastapi import APIRouter
-from app.helpers.get_agent_chained import get_chat_chain, system_prompt
+from app.helpers.get_agent_chained import get_chat_chain
 from app.inputs.chat import ChatInput
 
 router = APIRouter()
@@ -14,8 +14,6 @@ async def chat(chat_input: ChatInput):
 
         input_dict = {
             "messages": [
-                ("system", system_prompt),
-                ("placeholder", "{context}")
                 ("human", chat_input.prompt),
             ],
         }
