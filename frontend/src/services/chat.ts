@@ -1,4 +1,4 @@
-import { BASE_URL } from "./baseUrl";
+import { BASE_URL } from "constants";
 
 class ChatService {
   async chat(
