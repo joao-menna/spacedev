@@ -4,11 +4,14 @@ class ChatService {
   async chat(
     prompt: string,
     chat_id: string,
-    chunkCallback: (chunk: string) => void
+    chunkCallback: (chunk: string) => void,
+    finishedCallback: (response: string) => void
   ): Promise<string> {
     const res = await fetch(`${BASE_URL}/api/chat`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ prompt, chat_id }),
     });
 
@@ -23,7 +26,9 @@ class ChatService {
       const { value, done } = await reader.read();
 
       if (done) {
-        return chunks.join("");
+        const response = chunks.join("");
+        finishedCallback(response);
+        return response;
       }
 
       chunks.push(value);

@@ -4,9 +4,15 @@ import { router } from "routers/main";
 import { StrictMode } from "react";
 
 import "./index.css";
+import { TranslationProvider } from "contexts/translation";
+import { MessageProvider } from "contexts/message";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <TranslationProvider>
+      <MessageProvider>
+        <RouterProvider router={router} />
+      </MessageProvider>
+    </TranslationProvider>
   </StrictMode>
 );

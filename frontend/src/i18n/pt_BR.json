@@ -1,3 +1,10 @@
 {
-  "ApplicationName": "SpaceDev"
+  "ApplicationName": "SpaceDev",
+  "PromptPlaceholders": [
+    "Tem algum teste unitário para o método LoginAsync, da classe LogInManager?",
+    "Me explique o que faz a classe LogInManager",
+    "Como faço um componente de Dropdown no React segunido nossos modelos?",
+    "Qual classe é responsável pelo download dos documentos?",
+    "Por que a classe X tem esse nome?"
+  ]
 }
